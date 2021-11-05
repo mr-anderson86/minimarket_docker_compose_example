@@ -7,7 +7,8 @@ The whole infrastructure is configured and ran via docker-compose.
 (Created by mr-anderson86, started @11/2021)
 
 ## Structure
-![Infrastructure Design](Infrastructure.png)
+<img src="Infrastructure.png" alt="Infrastructure Design" width="500"/>
+
 * [The Frontend](frontend) - the frontend generates a new purchase and send the data to the Kafka.  
 In addition, it can also request from the backend API for purchase history of specific user (and show the result).
 * [The Kafka Consumer](backend_consumer) - part of the backed, which listens to the Kafka.  

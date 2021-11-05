@@ -1,0 +1,120 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    restart: unless-stopped
+  
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: /usr/bin/kafka-topics --bootstrap-server localhost:29092 --list
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pass12345
+    volumes:
+      - ./mongodb/database:/data/db
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=pass12345
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
+    healthcheck:
+      test: wget --quiet --tries=3 --spider http://admin:admin123@localhost:8081 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: frontend/.
+      args:
+        - TAG=1.0.0
+    image: frontend:1.0.0
+    ports:
+      - 9090:9090
+    environment:
+      - KAFKA_URL=kafka:9092
+      - BACKEND_URL=backend:9091
+    container_name: frontend
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
+  consumer:
+    build:
+      context: backend_consumer/.
+      args:
+        - TAG=1.0.0
+    image: consumer:1.0.0
+    environment:
+      - KAFKA_URL=kafka:9092
+      - MONGO_URL=mongodb:27017
+      - MONGO_USER=root
+      - MONGO_PASS=pass12345
+    container_name: consumer
+    depends_on:
+      - kafka
+      - mongodb
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: backend_api/.
+      args:
+        - TAG=1.0.0
+    image: backend:1.0.0
+    environment:
+      - MONGO_URL=mongodb:27017
+      - MONGO_USER=root
+      - MONGO_PASS=pass12345
+    container_name: backend
+    depends_on:
+      - mongodb
+    restart: unless-stopped

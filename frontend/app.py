@@ -31,7 +31,6 @@ while tries < 6:
 if tries == 6:
     raise ConnectionError("Couldn't connect to kafka")
 
-
 app = Flask(__name__)
 
 
@@ -40,8 +39,8 @@ def hello():
     text = "Hello, welcome to the miniminimini-market :-) <br><br>" \
            "to generate a random buying, just visit <a href=\"" + request.base_url + "buy\">" + request.base_url + "buy</a><br>" \
            + "buy and refresh the page as many times as you want. <br><br>" \
-           "" \
-           "In order to view purchase history, just visit <a href=\"" + request.base_url + "getAllUserBuys?userid=[userid]\">" + request.base_url + "getAllUserBuys?userid=[userid]</a><br>" \
+             "" \
+             "In order to view purchase history, just visit <a href=\"" + request.base_url + "getAllUserBuys?userid=[userid]\">" + request.base_url + "getAllUserBuys?userid=[userid]</a><br>" \
            + "And add the user ID in the link. Example: " + request.base_url + "getAllUserBuys?userid=1234"
     return text, 200
 

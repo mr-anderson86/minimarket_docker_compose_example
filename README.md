@@ -28,7 +28,32 @@ docker-compose up -d
 
 That's it, then all you need is to open your browser and go to http://localhost:9090/  
 It explains there how to generate a random purchase, and also how to retrieve purchase history of a specific user.  
-(You might need to wait ~10 seconds before the frontend application is up and running)
+  
+You might need to wait ~10 seconds before the frontend application is up and running.  
+Or you can tail the frontend log in realtime, until you see it's running:
+```bash
+[youruser@yourhost]$ docker logs -f frontend
+kafka_url = kafka:9092
+backend_url = backend:9091
+Attempting to connect to kafka...
+Attempting to connect to kafka...
+ * Serving Flask app 'app' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://192.168.192.8:9090/ (Press CTRL+C to quit)
+```
+
+To stop the minimarket, from the same directory type this command:
+```bash
+docker-compose down
+```
+The data from the DB won't be lost, since it is mounted from your host, so you'll see a new directory **mongodb** in your project's directory, 
+and it contains all purchase history data.  
+When you'll rerun the minimarket once again, the whole data will be mounted into the MongoDB, thus all purchase history will be there.
   
 ## Bonus
 Also added mongo-express, so you could access the data in your mongodb via web browser.  

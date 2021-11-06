@@ -10,8 +10,8 @@ The whole infrastructure is configured and ran via docker-compose.
 <img src="Infrastructure.png" alt="Infrastructure Design" width="500"/>
 
 * [The Frontend](frontend) - the frontend generates a new purchase and send the data to the Kafka.  
-In addition, it can also request from the backend API for purchase history of specific user (and show the result).
-* [The Kafka Consumer](backend_consumer) - part of the backed, which listens to the Kafka.  
+In addition, it can also request from the backend API for purchase history of a specific user (and show the result).
+* [The Kafka Consumer](backend_consumer) - part of the backend, which listens to the Kafka.  
 Each time there's a new data (a new purchase) it consumes it, and sends the data into the MongoDB.
 * [The Backend API Server](backend_api) - another flask application (not exposed to external network), which listens to requests from the frontend .  
 Currently, handles only 1 request: get the purchase history of a specific user.  

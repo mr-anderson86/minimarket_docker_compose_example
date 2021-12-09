@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secret
+  namespace: minimarket
+type: Opaque
+data:
+  username: cm9vdA==
+  password: cGFzczEyMzQ1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  namespace: minimarket
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: password
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "echo \'db.runCommand(\"ping\").ok\' | mongo localhost:27017/test --quiet"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-volume
+      volumes:
+        - name: mongo-volume
+          persistentVolumeClaim:
+            claimName: mongo-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  namespace: minimarket
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

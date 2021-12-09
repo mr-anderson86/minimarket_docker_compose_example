@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minimarket-configmap
+  namespace: minimarket
+data:
+  database_url: mongo-service

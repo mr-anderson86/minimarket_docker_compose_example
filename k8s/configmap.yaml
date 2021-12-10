@@ -7,5 +7,5 @@ data:
   mongo_service_name: mongo-service
   zookeeper_url: zookeeper-service:2181
   mongo_url: mongo-service:27017
-  kafka_url: kafka-service:29092
+  kafka_url: kafka-service:9092
   backend_url: backend-service:9091

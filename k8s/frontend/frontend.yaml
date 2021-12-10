@@ -27,10 +27,10 @@ spec:
                   name: minimarket-configmap
                   key: kafka_url
             - name: BACKEND_URL
-                valueFrom:
-                  configMapKeyRef:
-                    name: minimarket-configmap
-                    key: backend_url
+              valueFrom:
+                configMapKeyRef:
+                  name: minimarket-configmap
+                  key: backend_url
           livenessProbe:
             httpGet:
               path: /

@@ -11,7 +11,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo-deployment
+  name: mongo
   namespace: minimarket
   labels:
     app: mongo

@@ -39,7 +39,7 @@ spec:
           #livenessProbe:
           #  httpGet:
           #    path: /
-          #    port: 9090
+          #    port: 9091
           #  initialDelaySeconds: 5
           #  periodSeconds: 10
           #  timeoutSeconds: 5

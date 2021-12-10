@@ -19,16 +19,16 @@ spec:
         - name: consumer
           image: mranderson86/minimarket-backend-consumer
           env:
+            - name: KAFKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: minimarket-configmap
+                  key: kafka_url
             - name: MONGO_URL
               valueFrom:
                 configMapKeyRef:
                   name: minimarket-configmap
                   key: mongo_url
-            - name: BACKEND_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: minimarket-configmap
-                  key: backend_url
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:

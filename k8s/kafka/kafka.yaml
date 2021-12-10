@@ -6,7 +6,7 @@ metadata:
   labels:
     app: kafka
 spec:
-  replicas: 2
+  replicas: 1 #will be 2 in the future, need to check bug
   selector:
     matchLabels:
       app: kafka

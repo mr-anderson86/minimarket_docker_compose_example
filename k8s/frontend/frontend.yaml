@@ -26,7 +26,7 @@ spec:
                 configMapKeyRef:
                   name: minimarket-configmap
                   key: kafka_url
-            - name: KAFKA_URL
+            - name: BACKEND_URL
                 valueFrom:
                   configMapKeyRef:
                     name: minimarket-configmap

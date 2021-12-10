@@ -76,7 +76,7 @@ services:
       context: frontend/.
       args:
         - TAG=1.0.0
-    image: frontend:1.0.0
+    image: mranderson86/minimarket-frontend:1.0.0
     ports:
       - 9090:9090
     environment:
@@ -92,7 +92,7 @@ services:
       context: backend_consumer/.
       args:
         - TAG=1.0.0
-    image: consumer:1.0.0
+    image: mranderson86/minimarket-backend-consumer:1.0.0
     environment:
       - KAFKA_URL=kafka:9092
       - MONGO_URL=mongodb:27017
@@ -109,7 +109,7 @@ services:
       context: backend_api/.
       args:
         - TAG=1.0.0
-    image: backend:1.0.0
+    image: mranderson86/minimarket-backend-api:1.0.0
     environment:
       - MONGO_URL=mongodb:27017
       - MONGO_USER=root

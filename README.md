@@ -71,8 +71,8 @@ Attempting to connect to kafka...
 ```
 
 ### To stop the minimarket.
-* Via Docker:
-from the same directory type this command
+* Via Docker:  
+  (from the same directory type this command)
 ```bash
 docker-compose down
 ```

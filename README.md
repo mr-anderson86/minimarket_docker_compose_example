@@ -3,7 +3,7 @@
 ## Description
 
 This project simulates an online market/shop, where you can "buy" and view your purchase history.   
-The whole infrastructure is configured and ran on [Kubernetes or](https://kubernetes.io/) [Docker Compose](https://docs.docker.com/compose/).  
+The whole infrastructure is configured and ran on [Kubernetes](https://kubernetes.io/) or [Docker Compose](https://docs.docker.com/compose/).  
 (Created by mr-anderson86, started @11/2021)
 
 ## Structure

@@ -2,8 +2,9 @@
 
 ## Description
 
+The purpose of this project is to show the abilities both of [Docker](https://docs.docker.com) and [Kubernetes](https://kubernetes.io/).  
 This project simulates an online market/shop, where you can "buy" and view your purchase history.   
-The whole infrastructure is configured and ran on [Kubernetes](https://kubernetes.io/) or [Docker Compose](https://docs.docker.com/compose/).  
+The whole infrastructure is configured and ran on Kubernetes (using [Helm](https://helm.sh/) chart) or [Docker Compose](https://docs.docker.com/compose/).  
 (Created by mr-anderson86, started @11/2021)
 
 ## Structure
@@ -25,16 +26,16 @@ When such request is received, it queries the MongoDB for the data, and sends th
 * Via Docker Compose:  
 (need Docker installed on your host/computer)
 ```bash
-git clone https://github.com/mr-anderson86/minimarket.git
-cd minimarket
+git clone https://github.com/mr-anderson86/minimarket_kubernetes.git
+cd minimarket_kubernetes
 docker-compose up -d
 ```
 
 * Via Kubernetes:  
 (need to have both kubernetes and helm installed, and of course an existing k8s cluster, such as minikube, etc...)
 ```bash
-git clone https://github.com/mr-anderson86/minimarket.git
-cd kubernetes/helm
+git clone https://github.com/mr-anderson86/minimarket_kubernetes.git
+cd minimarket_kubernetes/kubernetes/helm
 # helm install [your app name] minimarket, example below:
 helm install minimarket minimarket
 

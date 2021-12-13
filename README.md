@@ -3,7 +3,7 @@
 ## Description
 
 This project simulates an online market/shop, where you can "buy" and view your purchase history.   
-The whole infrastructure is configured and ran via docker-compose.  
+The whole infrastructure is configured and ran on [Kubernetes or](https://kubernetes.io/) [Docker Compose](https://docs.docker.com/compose/).  
 (Created by mr-anderson86, started @11/2021)
 
 ## Structure
@@ -16,14 +16,32 @@ Each time there's a new data (a new purchase) it consumes it, and sends the data
 * [The Backend API Server](backend_api) - another flask application (not exposed to external network), which listens to requests from the frontend .  
 Currently, handles only 1 request: get the purchase history of a specific user.  
 When such request is received, it queries the MongoDB for the data, and sends the data back to the fronted.
-* Frontend, Backend, Kafka and MongoDB, are all being deployed via [docker-compose](docker-compose.yml).  
-  (The frontend, api server and kafka consumer are being firstly docker built, also via the docker compose)
+* Frontend, Backend, Kafka and MongoDB, are all being deployed via [docker-compose](docker-compose.yml) or by [Helm chart](kubernetes/helm/minimarket).  
+  (In docker-compose, The frontend, API server and Kafka consumer are all being firstly docker built)
 
 ## Usage
+
+### To start the minimarket
+* Via Docker Compose:  
+(need Docker installed on your host/computer)
 ```bash
 git clone https://github.com/mr-anderson86/minimarket.git
 cd minimarket
 docker-compose up -d
+```
+
+* Via Kubernetes:  
+(need to have both kubernetes and helm installed, and of course an existing k8s cluster, such as minikube, etc...)
+```bash
+git clone https://github.com/mr-anderson86/minimarket.git
+cd kubernetes/helm
+# helm install [your app name] minimarket, example below:
+helm install minimarket minimarket
+
+# If needed anymore network configuration to allow incoming requests, 
+# such as minikube tunnel
+# or kubectl proxy, etc...
+# now it's a good time ;-)
 ```
 
 That's it, then all you need is to open your browser and go to http://localhost:9090/  
@@ -47,13 +65,20 @@ Attempting to connect to kafka...
  * Running on http://192.168.192.8:9090/ (Press CTRL+C to quit)
 ```
 
-To stop the minimarket, from the same directory type this command:
+### To stop the minimarket.
+* Via Docker:
+from the same directory type this command
 ```bash
 docker-compose down
 ```
 The data from the DB won't be lost, since it is mounted from your host, so you'll see a new directory **mongodb** in your project's directory, 
 and it contains all purchase history data.  
 When you'll rerun the minimarket once again, the whole data will be mounted into the MongoDB, thus all purchase history will be there.
+
+* Via Helm:
+```bash
+helm uninstall [your app name]
+```
   
 ## Bonus
 Also added mongo-express, so you could access the data in your mongodb via web browser.  

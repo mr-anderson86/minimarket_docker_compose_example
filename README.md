@@ -52,9 +52,9 @@ You might need to wait ~10 seconds before the frontend application is up and run
 Or you can tail the frontend log in realtime, until you see it's running:
 ```bash
 # For docker:
-# docker logs -f frontend
+docker logs -f frontend
 # For k8s:
-# kubectl logs -f <frontend pod name> -n minimarket (or whichever namespace you gave in values)
+kubectl logs -f <frontend pod name> -n minimarket (or whichever namespace you gave in values)
 kafka_url = kafka:9092
 backend_url = backend:9091
 Attempting to connect to kafka...

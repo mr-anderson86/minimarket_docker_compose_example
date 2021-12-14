@@ -12,6 +12,11 @@ spec:
       app: {{ .Values.consumer.name }}
   template:
     metadata:
+      annotations:
+        #This little guy will force redeployment in case of changes in the configmap,
+        #thus will reload variables from the configmap
+        #(example: adding new variable or changing the value of an existing variable in the configmap)
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app: {{ .Values.consumer.name }}
     spec:

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper
-  namespace: minimarket
+  name: {{ .Values.zookeeper.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
     app: zookeeper
 spec:
-  replicas: 2
+  replicas: {{ .Values.zookeeper.replicas }}
   selector:
     matchLabels:
-      app: zookeeper
+      app: {{ .Values.zookeeper.name }}
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: {{ .Values.zookeeper.name }}
     spec:
       containers:
-        - name: zookeeper
-          image: zookeeper:latest
+        - name: {{ .Values.zookeeper.name }}
+          image: {{ .Values.zookeeper.image }}:{{ .Values.zookeeper.tag }}
           ports:
             - containerPort: 2181
           env:
@@ -29,12 +29,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper-service
-  namespace: minimarket
+  name: {{ .Values.zookeeper.name }}-service
+  namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    app: zookeeper
+    app: {{ .Values.zookeeper.name }}
   ports:
     - protocol: TCP
-      port: 2181
+      port: {{ .Values.zookeeper.port }}
       targetPort: 2181

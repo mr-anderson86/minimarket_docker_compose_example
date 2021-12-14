@@ -1,41 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: consumer
-  namespace: minimarket
+  name: {{ .Values.consumer.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
-    app: consumer
+    app: {{ .Values.consumer.name }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.consumer.replicas }}
   selector:
     matchLabels:
-      app: consumer
+      app: {{ .Values.consumer.name }}
   template:
     metadata:
       labels:
-        app: consumer
+        app: {{ .Values.consumer.name }}
     spec:
       containers:
-        - name: consumer
-          image: mranderson86/minimarket-backend-consumer
+        - name: {{ .Values.consumer.name }}
+          image: {{ .Values.consumer.image }}:{{ .Values.consumer.tag }}
           env:
             - name: KAFKA_URL
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: kafka_url
             - name: MONGO_URL
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: mongo_url
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: username
             - name: MONGO_PASS
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: password

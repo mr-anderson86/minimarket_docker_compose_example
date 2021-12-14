@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
-  namespace: minimarket
+  name: {{ .Values.frontend.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
-    app: frontend
+    app: {{ .Values.frontend.name }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
-      app: frontend
+      app: {{ .Values.frontend.name }}
   template:
     metadata:
       labels:
-        app: frontend
+        app: {{ .Values.frontend.name }}
     spec:
       containers:
-        - name: frontend
-          image: mranderson86/minimarket-frontend
+        - name: {{ .Values.frontend.name }}
+          image: {{ .Values.frontend.image }}:{{ .Values.frontend.tag }}
           ports:
             - containerPort: 9090
           env:
             - name: KAFKA_URL
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: kafka_url
             - name: BACKEND_URL
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: backend_url
           livenessProbe:
             httpGet:
@@ -43,14 +43,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
-  namespace: minimarket
+  name: {{ .Values.frontend.name }}-service
+  namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    app: frontend
+    app: {{ .Values.frontend.name }}
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 9090
+      port: {{ .Values.frontend.port }}
       targetPort: 9090
-      nodePort: 30090
+      nodePort: {{ .Values.frontend.nodePort }}

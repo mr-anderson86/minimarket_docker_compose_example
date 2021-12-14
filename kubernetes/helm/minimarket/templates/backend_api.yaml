@@ -1,40 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
-  namespace: minimarket
+  name: {{ .Values.backend.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
-    app: backend
+    app: {{ .Values.backend.name }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.backend.replicas }}
   selector:
     matchLabels:
-      app: backend
+      app: {{ .Values.backend.name }}
   template:
     metadata:
       labels:
-        app: backend
+        app: {{ .Values.backend.name }}
     spec:
       containers:
-        - name: backend
-          image: mranderson86/minimarket-backend-api
+        - name: {{ .Values.backend.name }}
+          image: {{ .Values.backend.image }}:{{ .Values.backend.tag }}
           ports:
             - containerPort: 9091
           env:
             - name: MONGO_URL
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: mongo_url
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: username
             - name: MONGO_PASS
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: password
           #livenessProbe:
           #  httpGet:
@@ -48,12 +48,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
-  namespace: minimarket
+  name: {{ .Values.backend.name }}-service
+  namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    app: backend
+    app: {{ .Values.backend.name }}
   ports:
     - protocol: TCP
-      port: 9091
+      port: {{ .Values.backend.port }}
       targetPort: 9091

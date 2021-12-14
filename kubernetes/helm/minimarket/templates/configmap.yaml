@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: minimarket-configmap
-  namespace: minimarket
+  name: {{ .Values.namespace.name }}-configmap
+  namespace: {{ .Values.namespace.name }}
 data:
-  mongo_service_name: mongo-service
-  zookeeper_url: zookeeper-service:2181
-  mongo_url: mongo-service:27017
-  kafka_url: kafka-service:9092
-  backend_url: backend-service:9091
+  mongo_service_name: {{ .Values.mongo.name }}-service
+  zookeeper_url: {{ .Values.zookeeper.name }}-service:{{ .Values.zookeeper.port }}
+  mongo_url: {{ .Values.mongo.name }}-service:{{ .Values.mongo.port }}
+  kafka_url: {{ .Values.kafka.name }}-service:{{ .Values.kafka.port }}
+  backend_url: {{ .Values.backend.name }}-service:{{ .Values.backend.port }}

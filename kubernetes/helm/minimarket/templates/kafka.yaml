@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka
-  namespace: minimarket
+  name: {{ .Values.kafka.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
-    app: kafka
+    app: {{ .Values.kafka.name }}
 spec:
-  replicas: 1 #will be 2 in the future, need to check bug
+  replicas: {{ .Values.kafka.replicas }}
   selector:
     matchLabels:
-      app: kafka
+      app: {{ .Values.kafka.name }}
   template:
     metadata:
       labels:
-        app: kafka
+        app: {{ .Values.kafka.name }}
     spec:
       containers:
-        - name: kafka
-          image: confluentinc/cp-kafka:7.0.0
+        - name: {{ .Values.kafka.name }}
+          image: {{ .Values.kafka.image }}:{{ .Values.kafka.tag }}
           ports:
             - containerPort: 9092
           env:
@@ -38,7 +38,7 @@ spec:
             - name: KAFKA_ZOOKEEPER_CONNECT
               valueFrom:
                 configMapKeyRef:
-                  name: minimarket-configmap
+                  name: {{ .Values.namespace.name }}-configmap
                   key: zookeeper_url
           livenessProbe:
             exec:
@@ -54,12 +54,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-service
-  namespace: minimarket
+  name: {{ .Values.kafka.name }}-service
+  namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    app: kafka
+    app: {{ .Values.kafka.name }}
   ports:
     - protocol: TCP
-      port: 9092
+      port: {{ .Values.kafka.port }}
       targetPort: 9092

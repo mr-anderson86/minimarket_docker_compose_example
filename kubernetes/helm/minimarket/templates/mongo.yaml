@@ -1,33 +1,48 @@
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.mongo.name }}-pvc
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.mongo.storage }}
+  selector:
+    matchLabels:
+      type: local
+---
+apiVersion: v1
 kind: Secret
 metadata:
-  name: mongo-secret
-  namespace: minimarket
+  name: {{ .Values.mongo.name }}-secret
+  namespace: {{ .Values.namespace.name }}
 type: Opaque
 data:
-  username: cm9vdA==
-  password: cGFzczEyMzQ1
+  username: {{ .Values.mongo.username }}
+  password: {{ .Values.mongo.password }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo
-  namespace: minimarket
+  name: {{ .Values.mongo.name }}
+  namespace: {{ .Values.namespace.name }}
   labels:
-    app: mongo
+    app: {{ .Values.mongo.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.mongo.replicas }}
   selector:
     matchLabels:
-      app: mongo
+      app: {{ .Values.mongo.name }}
   template:
     metadata:
       labels:
-        app: mongo
+        app: {{ .Values.mongo.name }}
     spec:
       containers:
-        - name: mongo
-          image: mongo:latest
+        - name: {{ .Values.mongo.name }}
+          image: {{ .Values.mongo.image }}:{{ .Values.mongo.tag }}
           ports:
             - containerPort: 27017
           env:
@@ -38,12 +53,12 @@ spec:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: username
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongo.name }}-secret
                   key: password
           livenessProbe:
             exec:
@@ -57,21 +72,21 @@ spec:
             failureThreshold: 3
           volumeMounts:
             - mountPath: /data/db
-              name: mongo-volume
+              name: {{ .Values.mongo.name }}-volume
       volumes:
-        - name: mongo-volume
+        - name: {{ .Values.mongo.name }}-volume
           persistentVolumeClaim:
-            claimName: mongo-pvc
+            claimName: {{ .Values.mongo.name }}-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-service
-  namespace: minimarket
+  name: {{ .Values.mongo.name }}-service
+  namespace: {{ .Values.namespace.name }}
 spec:
   selector:
-    app: mongo
+    app: {{ .Values.mongo.name }}
   ports:
     - protocol: TCP
-      port: 27017
+      port: {{ .Values.mongo.port }}
       targetPort: 27017

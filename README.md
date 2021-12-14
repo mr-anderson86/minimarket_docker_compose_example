@@ -45,7 +45,7 @@ helm install minimarket minimarket
 # now it's a good time ;-)
 ```
 
-That's it, then all you need is to open your browser and go to http://localhost:9090/  
+That's it! Then all you need to do is open your browser and go to http://localhost:9090/  
 It explains there how to generate a random purchase, and also how to retrieve purchase history of a specific user.  
   
 You might need to wait ~10 seconds before the frontend application is up and running.  

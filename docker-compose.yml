@@ -118,4 +118,3 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
-    #dummy

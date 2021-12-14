@@ -8,7 +8,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.mongo.storage }}
+      storage: {{ .Values.mongo.storage_size }}
   selector:
     matchLabels:
       type: local

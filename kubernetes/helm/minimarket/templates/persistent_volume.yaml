@@ -1,3 +1,4 @@
+{{- if .Values.mongo.create_pv }}
 kind: PersistentVolume
 apiVersion: v1
 metadata:
@@ -10,8 +11,9 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: {{ .Values.mongo.storage }}
+    storage: {{ .Values.mongo.storage_size }}
   accessModes:
     - ReadWriteOnce
   hostPath:
     path: /data
+{{- end}}

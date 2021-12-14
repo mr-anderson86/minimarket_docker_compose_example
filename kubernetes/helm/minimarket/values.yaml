@@ -29,8 +29,12 @@ mongo:
   replicas: 1
   username: cm9vdA== #base64 for root
   password: cGFzczEyMzQ1 #base64 for pass12345
-  storage: 1Gi
+  storage_size: 1Gi
   port: 27017
+  #if true, then it'll create a persistent volume, in the size of "storage_size" param,
+  #otherwise, the PVC will be claimed from an existing PV
+  #(meaning - if not true, then you must make sure there's an available PV before deploying mongo)
+  create_pv: true
 
 mongo_express:
   name: mongo-express
